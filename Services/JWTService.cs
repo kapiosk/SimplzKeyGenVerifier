@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SimplzKeyGenVerifier.Services
 {
-    public class JWTService
+    internal class JWTService
     {
         public string _tokenSecret;
         public int _tokenExpirationMinutes;

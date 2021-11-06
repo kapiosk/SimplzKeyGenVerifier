@@ -7,14 +7,14 @@ namespace SimplzKeyGenVerifier
 {
     public class Endpoints
     {
-        public static IResult Ping([FromServices] JWTService jwt)
+        internal static IResult Ping([FromServices] JWTService jwt)
         {
             Dictionary<string, object> dict = new();
             dict.Add("Ping", DateTime.UtcNow);
             return Results.Text(jwt.WriteToken(dict));
         }
 
-        public static async Task<IResult> RequestKeyAsync(
+        internal static async Task<IResult> RequestKeyAsync(
             [FromServices] JWTService jwt,
             [FromServices] AppDbContext context,
             [FromBody] string token,
