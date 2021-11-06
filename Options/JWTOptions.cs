@@ -2,6 +2,6 @@
 {
     public class JWTOptions
     {
-        public int TokenExpirationMinutes { get; set; } = 5;
+        public int TokenExpirationMonths { get; set; } = 12;
     }
 }

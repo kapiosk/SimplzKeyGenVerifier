@@ -26,7 +26,7 @@ builder.Services.AddResponseCompression(options =>
 });
 
 builder.Services.Configure<JWTOptions>(builder.Configuration.GetSection("JWTOptions"));
-builder.Services.AddScoped<JWTService>();
+builder.Services.AddScoped<IJwtHandler, JwtAsymmetricService>();
 
 await using WebApplication app = builder.Build();
 
@@ -38,6 +38,7 @@ app.UseRequestLocalization(new RequestLocalizationOptions
 app.UseResponseCompression();
 
 app.MapGet("/Ping", SimplzKeyGenVerifier.Endpoints.Ping);
-app.MapPost("/RequestKey/{licence}", SimplzKeyGenVerifier.Endpoints.RequestKeyAsync);
+app.MapGet("/Test", SimplzKeyGenVerifier.Endpoints.Test);
+app.MapPost("/RequestKey/{licenceCode}", SimplzKeyGenVerifier.Endpoints.RequestKeyAsync);
 
 await app.RunAsync();
