@@ -16,7 +16,7 @@ namespace SimplzKeyGenVerifier.Services
             _tokenExpirationMinutes = options.Value.TokenExpirationMinutes;
         }
 
-        public Dictionary<string, object> ReadToken(string token, string issuerSigningKey)
+        public static Dictionary<string, object> ReadToken(string token, string issuerSigningKey)
         {
             JwtSecurityTokenHandler handler = new();
             SymmetricSecurityKey SSKIn = new(Encoding.UTF8.GetBytes(issuerSigningKey));
