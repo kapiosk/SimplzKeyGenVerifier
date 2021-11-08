@@ -19,8 +19,9 @@ namespace SimplzKeyGenVerifier
         {
             Dictionary<string, object> res = new();
             res.Add("Success", false);
-            var token = jwt.WriteToken(res);
-            res = jwt.ReadToken(token, "");
+            var demoKey = "kjsdfhgnkjadsfngoasd;fngaosjpdfngpoasfngaognreogen[gnwerginw0egwj3g0w3984";
+            var token = jwt.WriteToken(res, demoKey);
+            res = jwt.ReadToken(token, demoKey);
             return Results.Ok(res);
         }
 
@@ -60,6 +61,7 @@ namespace SimplzKeyGenVerifier
                         }
                         await context.SaveChangesAsync(cToken);
                         transaction.Commit();
+                        return Results.Text(jwt.WriteToken(res, licence.PublicKey));
                     }
                 }
                 catch
@@ -68,7 +70,7 @@ namespace SimplzKeyGenVerifier
                     transaction.Rollback();
                 }
             }
-            return Results.Text(jwt.WriteToken(res)); //use salt in secret
+            return Results.BadRequest();
         }
     }
 }

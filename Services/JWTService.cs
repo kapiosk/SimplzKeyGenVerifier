@@ -1,27 +1,23 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SimplzKeyGenVerifier.Data;
 using SimplzKeyGenVerifier.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace SimplzKeyGenVerifier.Services
 {
-    internal class JWTService : IJwtHandler
+    internal class JwtService : IJwtHandler
     {
         private readonly int _tokenExpirationMonths;
-        private readonly AppDbContext _context;
-        private readonly string _tokenSecret = "";
-        public JWTService(IOptions<JWTOptions> options, AppDbContext context)
+        public JwtService(IOptions<JwtOptions> options)
         {
             _tokenExpirationMonths = options.Value.TokenExpirationMonths;
-            _context = context;
         }
 
-        public Dictionary<string, object> ReadToken(string token, string issuerSigningKey)
+        public Dictionary<string, object> ReadToken(string token, string presharedKey)
         {
             JwtSecurityTokenHandler handler = new();
-            SymmetricSecurityKey SSKIn = new(Encoding.UTF8.GetBytes(issuerSigningKey));
+            SymmetricSecurityKey SSKIn = new(Encoding.UTF8.GetBytes(presharedKey));
 
             try
             {
@@ -43,15 +39,20 @@ namespace SimplzKeyGenVerifier.Services
             }
         }
 
-        public string WriteToken(Dictionary<string, object> pl)
+        public string WriteToken(Dictionary<string, object> pl,string presharedKey)
         {
             JwtSecurityTokenHandler handler = new();
-            SymmetricSecurityKey SSKOut = new(Encoding.UTF8.GetBytes(_tokenSecret));
+            SymmetricSecurityKey SSKOut = new(Encoding.UTF8.GetBytes(presharedKey));
             SigningCredentials signingCredentials = new(SSKOut, SecurityAlgorithms.HmacSha256);
             var token = handler.CreateJwtSecurityToken(signingCredentials: signingCredentials, expires: DateTime.UtcNow.AddMonths(_tokenExpirationMonths));
             foreach (var p in pl)
                 token.Payload.Add(p.Key, p.Value);
             return handler.WriteToken(token);
+        }
+
+        public string WriteToken(Dictionary<string, object> pl)
+        {
+            throw new NotImplementedException();
         }
     }
 }

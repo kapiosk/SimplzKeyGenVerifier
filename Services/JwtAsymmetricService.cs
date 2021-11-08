@@ -10,20 +10,18 @@ namespace SimplzKeyGenVerifier.Services
     {
         private readonly int _tokenExpirationMonths;
         private readonly byte[] _privateKey;
-        private const string pKey = @"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2DLJWD9/JCn7CbkJ25/b RrK66VJveR9ogNha/siP1yMHqni9Tp1FG0hSpyWVH/IUF220jN70+D6rRR6a8Czt 5+1maZEzYvjAfqTi7vwuUGyciDe/fnfhVaL6aba1Uxs01tVtabXqiSl853w5Prmb sgh3CIK9S6WxLseJKVOedX6z9n79rwEZMtI7xfyLOODyKLyD+HvDRrIEos2qwn1/ x1NUpw5tuUERXAvnkOTFr98A81E3EDXE/ZSWibnIjA9x4mb0pUF/p3uuwWcy67jZ syN2Yz0hqzE7lXmnmEqs7dm7iTjyWm/iW/8zvBJf70AyIVBA3RLuLITeeMrIk+jE bQIDAQAB";
 
         public JwtAsymmetricService(IOptions<JwtAsymmetricOptions> options)
         {
             _tokenExpirationMonths = options.Value.TokenExpirationMonths;
             _privateKey = Convert.FromBase64String(options.Value.PrivateKey);
-            //_privateKey = Convert.FromBase64String(key);
         }
 
         public Dictionary<string, object> ReadToken(string token, string publicKey)
         {
             JwtSecurityTokenHandler handler = new();
             using RSA rsa = RSA.Create(2048);
-            rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(pKey), out _);
+            rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(publicKey), out _);
 
             try
             {
@@ -63,6 +61,11 @@ namespace SimplzKeyGenVerifier.Services
             foreach (var p in pl)
                 token.Payload.Add(p.Key, p.Value);
             return handler.WriteToken(token);
+        }
+
+        public string WriteToken(Dictionary<string, object> pl, string presharedKey)
+        {
+            throw new NotImplementedException();
         }
     }
 }

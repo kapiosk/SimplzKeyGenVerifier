@@ -25,8 +25,17 @@ builder.Services.AddResponseCompression(options =>
     options.Providers.Add<GzipCompressionProvider>();
 });
 
-builder.Services.Configure<JwtAsymmetricOptions>(builder.Configuration.GetSection("JwtAsymmetricOptions"));
-builder.Services.AddScoped<IJwtHandler, JwtAsymmetricService>();
+if (builder.Configuration.GetValue<bool>("JwtOptions:IsEnabled"))
+{
+    builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
+    builder.Services.AddScoped<IJwtHandler, JwtService>();
+}
+else if (builder.Configuration.GetValue<bool>("JwtAsymmetricOptions:IsEnabled"))
+{
+    builder.Services.Configure<JwtAsymmetricOptions>(builder.Configuration.GetSection("JwtAsymmetricOptions"));
+    builder.Services.AddScoped<IJwtHandler, JwtAsymmetricService>();
+}
+
 
 await using WebApplication app = builder.Build();
 
