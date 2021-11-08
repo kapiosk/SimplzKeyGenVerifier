@@ -18,7 +18,7 @@ namespace SimplzKeyGenVerifier.Services
             _context = context;
         }
 
-        public Dictionary<string, object> ReadToken(string token, string licenceCode)
+        public Dictionary<string, object> ReadToken(string token, string issuerSigningKey)
         {
             JwtSecurityTokenHandler handler = new();
             SymmetricSecurityKey SSKIn = new(Encoding.UTF8.GetBytes(issuerSigningKey));
