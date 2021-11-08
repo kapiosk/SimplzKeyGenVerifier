@@ -2,7 +2,7 @@
 {
     public interface IJwtHandler
     {
-        public Dictionary<string, object> ReadToken(string token, string issuerSigningKey);
+        public Dictionary<string, object> ReadToken(string token, string licenceCode);
         public string WriteToken(Dictionary<string, object> pl);
     }
 }

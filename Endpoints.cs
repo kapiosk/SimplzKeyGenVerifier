@@ -21,7 +21,7 @@ namespace SimplzKeyGenVerifier
             res.Add("Success", false);
             var token = jwt.WriteToken(res);
             res = jwt.ReadToken(token, "");
-            return Results.Ok();
+            return Results.Ok(res);
         }
 
         internal static async Task<IResult> RequestKeyAsync(
@@ -39,9 +39,9 @@ namespace SimplzKeyGenVerifier
                 try
                 {
                     var licence = await context.Licence.FirstOrDefaultAsync(l => l.LicenceCode.Equals(licenceCode), cToken);
-                    if (licence != null)
+                    if (licence != null && !string.IsNullOrWhiteSpace(licence.PublicKey))
                     {
-                        var req = jwt.ReadToken(token, licenceCode);
+                        var req = jwt.ReadToken(token, licence.PublicKey);
                         if (req.TryGetValue("Hash", out var obj) && obj is string hash)
                         {
                             await context.Logs.AddAsync(new Models.Log { LicenceId = licence.LicenceId, Hash = hash }, cToken);

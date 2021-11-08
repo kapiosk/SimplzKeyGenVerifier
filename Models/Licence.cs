@@ -8,5 +8,6 @@
         public DateTime CreateDate { get; set; } = DateTime.UtcNow;
         public List<Log> Logs { get; set; } = new();
         public string? Hash { get; set; }
+        public string? PublicKey { get; set; }
     }
 }
